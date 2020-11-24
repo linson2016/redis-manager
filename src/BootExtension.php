@@ -20,8 +20,10 @@ trait BootExtension
      */
     protected static function registerRoutes()
     {
-        parent::routes(function ($router) {
-            /* @var \Illuminate\Routing\Router $router */
+        app('router')->group([
+            'middleware'=>['sys.admin'],
+            'prefix'=>'sys'
+        ],function ($router){
             $router->get('redis', 'Encore\Admin\RedisManager\RedisController@index')->name('redis-index');
             $router->delete('redis/key', 'Encore\Admin\RedisManager\RedisController@destroy')->name('redis-key-delete');
             $router->get('redis/fetch', 'Encore\Admin\RedisManager\RedisController@fetch')->name('redis-fetch-key');
@@ -34,6 +36,10 @@ trait BootExtension
             $router->get('redis/console', 'Encore\Admin\RedisManager\RedisController@console')->name('redis-console');
             $router->post('redis/console', 'Encore\Admin\RedisManager\RedisController@execute')->name('redis-execute');
         });
+       /* parent::routes(function ($router) {
+            /* @var \Illuminate\Routing\Router $router */
+
+        //});
     }
 
     /**

@@ -17,27 +17,27 @@ class RedisController extends BaseController
      */
     public function index()
     {
-        return Admin::content(function (Content $content) {
-            $content->header('Redis manager');
-            $content->description('Connections');
-            $content->breadcrumb(['text' => 'Redis manager']);
+        $content = new Content();
+        $content->header('Redis manager');
+        $content->description('Connections');
+        $content->breadcrumb(['text' => 'Redis manager']);
 
-            $connection = request('conn', 'default');
+        $connection = request('conn', 'default');
 
-            $manager = $this->manager();
+        $manager = $this->manager();
 //dd($manager->getConnections());
-            $variables = [
-                'conn'        => $connection,
-                'info'        => $manager->getInformation(),
-                'connections' => $manager->getConnections(),
-                'keys'        => $manager->scan(
-                    request('pattern', '*'),
-                    request('count', 50)
-                ),
-            ];
+        $variables = [
+            'conn'        => $connection,
+            'info'        => $manager->getInformation(),
+            'connections' => $manager->getConnections(),
+            'keys'        => $manager->scan(
+                request('pattern', '*'),
+                request('count', 50)
+            ),
+        ];
 
-            $content->body(view('laravel-admin-redis-manager::index', $variables));
-        });
+        $content->body(view('laravel-admin-redis-manager::index', $variables));
+        return $content;
     }
 
     /**
@@ -49,32 +49,32 @@ class RedisController extends BaseController
      */
     public function edit(Request $request)
     {
-        return Admin::content(function (Content $content) use ($request) {
-            $connection = $request->get('conn', 'default');
+        $content = new Content();
+        $connection = $request->get('conn', 'default');
 
-            $manager = $this->manager();
+        $manager = $this->manager();
 
-            $variables = [
-                'conn'        => $connection,
-                'info'        => $manager->getInformation(),
-                'connections' => $manager->getConnections(),
-                'data'        => $manager->fetch($request->get('key')),
-            ];
+        $variables = [
+            'conn'        => $connection,
+            'info'        => $manager->getInformation(),
+            'connections' => $manager->getConnections(),
+            'data'        => $manager->fetch($request->get('key')),
+        ];
 
-            if (empty($variables['data'])) {
-                $view = 'laravel-admin-redis-manager::edit.nil';
-            } else {
-                $view = 'laravel-admin-redis-manager::edit.'.$variables['data']['type'];
-            }
+        if (empty($variables['data'])) {
+            $view = 'laravel-admin-redis-manager::edit.nil';
+        } else {
+            $view = 'laravel-admin-redis-manager::edit.'.$variables['data']['type'];
+        }
 
-            $content->header('Redis manager');
-            $content->description('Connections');
-            $content->breadcrumb(
-                ['text' => 'Redis manager', 'url' => route('redis-index', ['conn' => $connection])],
-                ['text' => 'Edit']
-            );
-            $content->body(view($view, $variables));
-        });
+        $content->header('Redis manager');
+        $content->description('Connections');
+        $content->breadcrumb(
+            ['text' => 'Redis manager', 'url' => route('redis-index', ['conn' => $connection])],
+            ['text' => 'Edit']
+        );
+        $content->body(view($view, $variables));
+        return $content;
     }
 
     /**
@@ -86,28 +86,28 @@ class RedisController extends BaseController
      */
     public function create(Request $request)
     {
-        return Admin::content(function (Content $content) use ($request) {
-            $connection = $request->get('conn', 'default');
+        $content = new Content();
+        $connection = $request->get('conn', 'default');
 
-            $manager = $this->manager();
+        $manager = $this->manager();
 
-            $vars = [
-                'conn'        => $connection,
-                'info'        => $manager->getInformation(),
-                'connections' => $manager->getConnections(),
-                'type'        => $request->get('type'),
-            ];
+        $vars = [
+            'conn'        => $connection,
+            'info'        => $manager->getInformation(),
+            'connections' => $manager->getConnections(),
+            'type'        => $request->get('type'),
+        ];
 
-            $view = 'laravel-admin-redis-manager::create.'.$vars['type'];
+        $view = 'laravel-admin-redis-manager::create.'.$vars['type'];
 
-            $content->header('Redis manager');
-            $content->description('Connections');
-            $content->breadcrumb(
-                ['text' => 'Redis manager', 'url' => route('redis-index', ['conn' => $connection])],
-                ['text' => 'Create']
-            );
-            $content->body(view($view, $vars));
-        });
+        $content->header('Redis manager');
+        $content->description('Connections');
+        $content->breadcrumb(
+            ['text' => 'Redis manager', 'url' => route('redis-index', ['conn' => $connection])],
+            ['text' => 'Create']
+        );
+        $content->body(view($view, $vars));
+        return $content;
     }
 
     /**
@@ -173,27 +173,27 @@ class RedisController extends BaseController
      */
     public function console(Request $request)
     {
-        return Admin::content(function (Content $content) use ($request) {
-            $connection = $request->get('conn', 'default');
+        $content = new Content();
+        $connection = $request->get('conn', 'default');
 
-            $manager = $this->manager();
+        $manager = $this->manager();
 
-            $vars = [
-                'conn'        => $connection,
-                'info'        => $manager->getInformation(),
-                'connections' => $manager->getConnections(),
-            ];
+        $vars = [
+            'conn'        => $connection,
+            'info'        => $manager->getInformation(),
+            'connections' => $manager->getConnections(),
+        ];
 
-            $view = 'laravel-admin-redis-manager::console';
+        $view = 'laravel-admin-redis-manager::console';
 
-            $content->header('Redis manager');
-            $content->description('Connections');
-            $content->breadcrumb(
-                ['text' => 'Redis manager', 'url' => route('redis-index', ['conn' => $connection])],
-                ['text' => 'Console']
-            );
-            $content->body(view($view, $vars));
-        });
+        $content->header('Redis manager');
+        $content->description('Connections');
+        $content->breadcrumb(
+            ['text' => 'Redis manager', 'url' => route('redis-index', ['conn' => $connection])],
+            ['text' => 'Console']
+        );
+        $content->body(view($view, $vars));
+        return $content;
     }
 
     /**
